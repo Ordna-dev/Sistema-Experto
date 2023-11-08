@@ -25,8 +25,24 @@ cargar_aves :-
     % Llama a la función para leer y cargar las aves
     leer_aves(Stream),
     % Cierra el archivo
-    format('Archivo de aves leido'),
-    close(Stream).
+    close(Stream),
+    format('Archivo de aves leído.\n'),
+    % Ahora mostramos todas las aves cargadas
+    mostrar_aves_cargadas.
+
+% Muestra todas las aves que han sido cargadas en la base de conocimientos
+mostrar_aves_cargadas :-
+    format('Aves cargadas en la base de conocimientos:\n'),
+    (   % Comprobar si existe al menos una definición de ave con 13 atributos
+        ave(_, _, _, _, _, _, _, _, _, _, _, _, _)
+    ->  % Usar forall/2 para iterar sobre las aves si existen
+        forall(
+            ave(Nombre, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion),
+            format('Ave: ~w, Ojos: ~w, Pico: ~w, Cuerpo: ~w, Patas: ~w, Tarsos: ~w, Loras: ~w, Alas: ~w, Vientre: ~w, Corona: ~w, Espalda: ~w, Habitat: ~w, Alimentacion: ~w\n', [Nombre, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion])
+        )
+    ;   % En caso de que no haya aves, mostrar un mensaje
+        format('No hay aves registradas en la base de conocimientos.\n')
+    ).
 
 % Función recursiva para leer el archivo de aves línea por línea
 leer_aves(Stream) :-
@@ -61,8 +77,13 @@ start_gui :-
 
     new(MiVentana, dialog('Identificador de Aves')),
 
+    send(MiVentana, append, label(instructivo, 'IMPORTANTE: Si no tiene informacion de un atributo específico, escriba \'desconocido\'.')),
+    send(MiVentana, append, label(instructivo, 'NOTA: Si son multiples valores para un atributo especifico escriba por ejemplo: \'rojo,azul\'')),
+
     % Crear campos de texto para cada atributo relevante
-    send(MiVentana, append, new(Ojos, text_item('ojos'))),
+    send(MiVentana, append, new(Ojos, text_item('Color de ojos'))),
+
+
     send(MiVentana, append, new(Pico, text_item('pico'))),
     send(MiVentana, append, new(Cuerpo, text_item('cuerpo'))),
     send(MiVentana, append, new(Patas, text_item('patas'))),
@@ -95,9 +116,8 @@ start_gui :-
     % Boton para mostrar todas las aves de la base de conocimientos
     send(MiVentana, append, button('Mostrar todas las aves', message(@prolog, mostrar_aves))),
 
-    % Boton para salir de la interfaz
-    send(MiVentana, append, button('Salir', message(MiVentana, destroy))),
-
+    % Boton para salir de la interfaz y limpiar la base de conocimientos de las aves
+    send(MiVentana, append, button('Salir', message(@prolog, limpiar_datos_y_salir, MiVentana))),
     send(MiVentana, open).
 
 % Se recogen los valores de las aves y su nombre
@@ -113,17 +133,34 @@ gui_agregar_ave(Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona,
         Nombre?selection, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion, Diag))),
     send(Diag, open).
 
-% Guardar el ave en la base de conocimientos y cerrar el diálogo
 nuevaAve(NombreAve, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion, Diag) :-
-
     % Realiza el assertz con los valores recolectados
     assertz(ave(NombreAve, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion)),
+
+    % Abre el archivo en modo de anexión
+    open('AvesColomosPrueba.pl', append, File),
+
+    % Escribe la información del ave en el archivo
+    % Asegúrate de que cada atributo esté presente, utiliza 'null' si falta alguno
+    maplist(ensure_value, [Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion], Values),
+    format(File, 'ave(~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w).\n', [NombreAve|Values]),
+
+    % Cierra el archivo
+    close(File),
 
     % Muestra el mensaje de confirmación
     send(@display, inform, 'La ave ha sido agregada en la base de datos'),
 
     % Cierra la ventana de diálogo después de agregar la ave
     send(Diag, destroy).
+
+% Asegurarse de que cada valor esté presente, de lo contrario utilizar 'null'
+ensure_value(Value, Result) :-
+    (   nonvar(Value), Value \= '' -> Result = Value
+    ;   Result = 'null'
+    ).
+
+
 
 % Mostrar todas las aves en la base de conocimientos
 mostrar_aves :-
@@ -154,3 +191,11 @@ mostrar_aves :-
     % Mostrar la ventana
     send(Dialogo, open).
 
+% Predicado para limpiar los datos de aves y cerrar la ventana
+limpiar_datos_y_salir(Ventana) :-
+    retractall(ave(_, _, _, _, _, _, _, _, _, _, _, _, _)),
+    send(Ventana, destroy).
+
+
+% Falta: Identificar Aves, guardar el ave añadida a la base de datos y
+% por ultimo darle un poco de decoracion a la interfaz
