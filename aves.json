@@ -1,0 +1,570 @@
+[
+    {
+        "nombre": "Garceta pie dorado adulto",
+        "ojos": "amarillos",
+        "pico": "negro",
+        "loras": "amarillas",
+        "cuerpo": "blanco",
+        "tarsos": "negros",
+        "patas": "amarillas",
+        "habitat": "acuático",
+        "alimentacion": ["peces", "insectos", "crustáceos"]
+    },
+    {
+        "nombre": "Garceta pie dorado joven",
+        "ojos": "amarillos",
+        "pico": ["negro", "amarillo con la punta negra"],
+        "loras": "amarillas",
+        "cuerpo": "blanco",
+        "tarsos": ["amarillos", "verde amarillento"],
+        "patas": "amarillas",
+        "habitat": "acuático",
+        "alimentacion": ["peces", "insectos", "crustáceos"]
+    },
+    {
+        "nombre": "Garza ganadera adulto",
+        "ojos": "amarillos",
+        "pico": ["amarillos", "anaranjado"],
+        "cuerpo": "blanco",
+        "patas": "negras",
+        "tarsos": "negros",
+        "corona": "anaranjado claro",
+        "espalda": "anaranjado claro",
+        "pecho": "anaranjado claro",
+        "habitat": ["granjas", "sembradíos", "cuerpos de agua"],
+        "alimentacion": ["insectos", "huevos de otras aves", "peces"]
+    },
+    {
+        "nombre": "Garza ganadera joven",
+        "ojos": "amarillos",
+        "pico": "negro",
+        "cuerpo": "blanco",
+        "patas": "negras",
+        "tarsos": "negros",
+        "loras": "amarillentas",
+        "habitat": ["granjas", "sembradíos", "cuerpos de agua"],
+        "alimentacion": ["insectos", "huevos de otras aves", "peces"]
+    },
+    {
+        "nombre": "Garceta verde",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Pedrete corona negra",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Zopilote común",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Zopilote aura",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Gavilán pecho rufo",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Aguililla cola roja",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Cernícalo americano",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Paloma doméstica",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Tórtola cola larga",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Perico frente naranja",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Loro corona lila",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Garrapatero pijuy",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Lechuza de campanario",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chotacabras menor",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chotacabras zumbón",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Colibrí pico ancho",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Zafiro oreja blanca",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Colibrí berilo",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Colibrí corona violeta",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Momoto corona café",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Martín pescador norteño",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Martín pescador verde",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Carpintero del desierto",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Carpintero cheje",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chupasavia maculado",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Carpintero mexicano",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Mosquero copetón",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Pibí tengo frío",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Mosquero mínimo",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Mosquero Hammond",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Papamoscas llanero",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Mosquero cardenal",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Luis bienteveo",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Luis gregario",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Tirano gritón",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Tirano pico grueso",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Tirano pálido",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Alcaudón verdugo",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Vireo plomizo",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chara de San Blas",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Golondrina aliaserrada",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Golondrina tijereta",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chivirín barranqueño",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chivirín cola oscura",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chivirín saltapared",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Reyezuelo de rojo",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Perlita azul-gris",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Clarín jilguero",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Zorzal cola rufa",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Mirlo dorso rufo",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Mirlo primavera",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Centzontle norteño",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Cuitlacoche pico curvo",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Mulato azul",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Ampelis chinito",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Capulinero gris",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chipe corona anaranjada",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chipe de coronilla",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chipe coronado",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chipe negro-gris",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chipe negro-amarillo",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chipe cabeza amarilla",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chipe trepador",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chipe flameanta",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chipe de Tolmie",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chipe corona negra",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Chipe ala blanca",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Tángara encinera",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Tángara capucha roja",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Semillero de collar",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Rascador nuca rufa",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Toquí pardo",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Gorrión ceja blanca",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Gorrión arlequín",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Gorrión de Lincoln",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Picogordo tigrillo",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Picogordo azul",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Zanate mexicano",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Tordo ojo rojo",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Tordo cabeza café",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Bolsero encapuchado",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Bolsero dorso rayado",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Bolsero calandria",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Pinzón mexicano",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Jilguero dominico",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Gorrión casero",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    },
+    {
+        "nombre": "Los patos del Estanque",
+        "ojos": "",
+        "habitat": "",
+        "alimentacion": ""
+    }
+]
