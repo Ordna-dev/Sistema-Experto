@@ -21,7 +21,7 @@
 cargar_aves :-
     format('Iniciando la carga de aves desde el archivo...\n'),
     % Abre el archivo de la base de datos de aves en modo lectura
-    open('AvesColomosPrueba.pl', read, Stream),
+    open('AvesColomos.pl', read, Stream),
     % Llama a la función para leer y cargar las aves
     leer_aves(Stream),
     % Cierra el archivo
@@ -79,7 +79,7 @@ start_gui :-
     format('Iniciando la interfaz gráfica...\n'),
     cargar_aves,
 
-    new(MiVentana, dialog('Identificador de Aves')),
+    new(MiVentana, dialog('Sistema experto de aves - Bosque "Los Colomos"')),
 
     send(MiVentana, append, label(instructivo, 'IMPORTANTE: Si no tiene informacion de un atributo específico, escriba \'desconocido\'.')),
     send(MiVentana, append, label(instructivo, 'NOTA: Si son multiples valores para un atributo especifico escriba por ejemplo: \'rojo,azul\'')),
@@ -103,7 +103,6 @@ start_gui :-
     send(MiVentana, append, new(Alimentacion, text_item('alimentacion'))),
 
     % Crear botones
-    % Botón para identificar ave por sus atributos
     % Botón para identificar ave por sus atributos
     send(MiVentana, append, button('Identificar ave', message(@prolog, buscar_ave,
     Ojos?selection, Pico?selection, Cuerpo?selection, Patas?selection, Tarsos?selection,
@@ -138,14 +137,16 @@ gui_agregar_ave(Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona,
     format('Recibido - Ojos: ~w, Pico: ~w, Cuerpo: ~w, Patas: ~w, Tarsos: ~w, Loras: ~w, Alas: ~w, Vientre: ~w, Corona: ~w, Espalda: ~w, Habitat: ~w, Alimentacion: ~w\n',
         [Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion]),
 
+
     new(Diag, dialog('Agregar nueva ave')),
     send(Diag, append, new(Nombre, text_item(nombre))),
     send(Diag, append, button('Aceptar', message(@prolog, nuevaAve,
         Nombre?selection, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion, Diag))),
     send(Diag, open).
 
-nuevaAve(NombreAve, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion, Diag) :-
+nuevaAve(NombreAveInput, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion, Diag) :-
     % Realiza el assertz con los valores recolectados
+    replace_spaces_with_underscores(NombreAveInput, NombreAve),
     assertz(ave(NombreAve, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion)),
 
     % Abre el archivo en modo de anexión
@@ -180,6 +181,18 @@ ensure_value(Value, Result) :-
         )
     ;   Result = 'null'
     ).
+
+% Predicado auxiliar para reemplazar espacios con guiones bajos
+replace_spaces_with_underscores(Input, Output) :-
+    atom_codes(Input, Codes),
+    maplist(replace_space, Codes, ReplacedCodes),
+    atom_codes(Output, ReplacedCodes).
+
+% Reemplaza el código ASCII del espacio (32) por el del guión bajo (95)
+replace_space(32, 95) :- !.
+replace_space(Code, Code).
+
+
 
 
 
@@ -237,7 +250,9 @@ buscar_ave_nombre :-
     send(DialogoBuscar, open).
 
 % Función para buscar un ave por nombre y mostrar la información
-identificar_ave_por_nombre(NombreAve, DialogoBuscar) :-
+identificar_ave_por_nombre(NombreAveInput, DialogoBuscar) :-
+    % Reemplaza espacios en el nombre del ave con guiones bajos
+    replace(NombreAveInput, NombreAve),
     (   ave(NombreAve, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion)
     ->  send(DialogoBuscar, destroy), % Cierra el diálogo de búsqueda
         mostrar_informacion_ave(NombreAve, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion)
@@ -305,25 +320,53 @@ replace_spaces(String, URLFriendlyString) :-
     split_string(String, " ", "+", SubStrings),
     atomic_list_concat(SubStrings, "+", URLFriendlyString).
 
+% Reemplaza espacios en una cadena con guiones bajos
+replace(Input, Output) :-
+    split_string(Input, " ", "", Parts),
+    atomic_list_concat(Parts, '_', Output).
 
 
 
 
 
-% Identificar ave por sus atributos con 2 atributos coincidentes basta
+
+% Identificar ave por sus atributos con el mayor número de coincidencias
 buscar_ave(Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion) :-
-    findall(NombreAve, (
-        ave(NombreAve, OjosAve, PicoAve, CuerpoAve, PatasAve, TarsosAve, LorasAve, AlasAve, VientreAve, CoronaAve, EspaldaAve, HabitatAve, AlimentacionAve),
+    % Encuentra todas las aves con el conteo de coincidencias
+    findall(Nombre-Coincidencias, (
+        ave(Nombre, OjosAve, PicoAve, CuerpoAve, PatasAve, TarsosAve, LorasAve, AlasAve, VientreAve, CoronaAve, EspaldaAve, HabitatAve, AlimentacionAve),
         coincidencias([Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion],
                       [OjosAve, PicoAve, CuerpoAve, PatasAve, TarsosAve, LorasAve, AlasAve, VientreAve, CoronaAve, EspaldaAve, HabitatAve, AlimentacionAve],
-                      0, Coincidencias),
-        Coincidencias >= 2
-    ), AvesCoincidentes),
+                      0, Coincidencias)
+    ), AvesConCoincidencias),
 
-    % Crear el diálogo y mostrar los resultados
+    % Encuentra el mayor número de coincidencias
+    max_coincidencias(AvesConCoincidencias, MaxCoincidencias),
+
+    % Crear el diálogo y mostrar los resultados o un mensaje si no hay coincidencias
     new(DialogoResultado, dialog('Resultados')),
-    forall(member(Ave, AvesCoincidentes),
-           send(DialogoResultado, append, label('', string('Ave coincidente: %s', Ave)))
+    (   MaxCoincidencias == 0 ->
+    send(DialogoResultado, append, label('', 'Coincidencias no encontradas.'))
+    ;   % Filtra las aves que tienen el mayor número de coincidencias
+    include(has_max_coincidencias(MaxCoincidencias), AvesConCoincidencias, AvesFiltradas),
+    forall(member(Ave-Coincidencias, AvesFiltradas), (
+        % Sustituye espacios por '+', ya que en las URLs los espacios se representan con '+'
+        replace_spaces(Ave, URLFriendlyNombre),
+
+        % Concatena la base de la URL con el nombre de la ave formateado para URL
+        SearchURLBase = 'https://www.google.com/search?q=ave+',
+        atom_concat(SearchURLBase, URLFriendlyNombre, SearchURL),
+
+        % Añade el nombre de la ave y el número de coincidencias al diálogo
+        send(DialogoResultado, append, label('', string('Ave coincidente: %s (Coincidencias: %d)', Ave, Coincidencias))),
+
+        % Añade la etiqueta 'Más información en:' y el enlace de búsqueda al diálogo
+        send(DialogoResultado, append, label(mas_info, 'Más información en:')),
+        send(DialogoResultado, append, text_item(search_url, SearchURL)),
+
+        % Añade un separador visual
+        send(DialogoResultado, append, label('', '-----------------'))
+    ))
     ),
 
     % Botón para cerrar la ventana de diálogo
@@ -331,6 +374,17 @@ buscar_ave(Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espa
 
     % Ajustar el tamaño de la ventana al contenido y mostrarla
     send(DialogoResultado, open).
+
+
+max_coincidencias(AvesConCoincidencias, MaxCoincidencias) :-
+    maplist(second, AvesConCoincidencias, ListaCoincidencias),
+    max_list(ListaCoincidencias, MaxCoincidencias).
+
+second(_-X, X).
+
+has_max_coincidencias(MaxCoincidencias, _-Coincidencias) :-
+    Coincidencias = MaxCoincidencias.
+
 
 % Auxiliar para contar coincidencias
 coincidencias([], [], Contador, Contador).
