@@ -82,8 +82,6 @@ start_gui :-
 
     % Crear campos de texto para cada atributo relevante
     send(MiVentana, append, new(Ojos, text_item('Color de ojos'))),
-
-
     send(MiVentana, append, new(Pico, text_item('pico'))),
     send(MiVentana, append, new(Cuerpo, text_item('cuerpo'))),
     send(MiVentana, append, new(Patas, text_item('patas'))),
@@ -101,11 +99,15 @@ start_gui :-
     send(MiVentana, append, new(Alimentacion, text_item('alimentacion'))),
 
     % Crear botones
-    % Botón para identificar ave
-    send(MiVentana, append, button('Identificar', message(@prolog, identificar_ave,
+    % Botón para identificar ave por sus atributos
+    % Botón para identificar ave por sus atributos
+    send(MiVentana, append, button('Identificar ave', message(@prolog, buscar_ave,
     Ojos?selection, Pico?selection, Cuerpo?selection, Patas?selection, Tarsos?selection,
     Loras?selection, Alas?selection, Vientre?selection, Corona?selection, Espalda?selection,
     Habitat?selection, Alimentacion?selection))),
+
+    % Botón para identificar ave por sólo su nombre
+    send(MiVentana, append, button('Identificar ave por nombre', message(@prolog, buscar_ave_nombre))),
 
     % Botón para agregar ave
     send(MiVentana, append, button('Agregar ave', message(@prolog, gui_agregar_ave,
@@ -133,6 +135,7 @@ gui_agregar_ave(Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona,
         Nombre?selection, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion, Diag))),
     send(Diag, open).
 
+
 nuevaAve(NombreAve, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion, Diag) :-
     % Realiza el assertz con los valores recolectados
     assertz(ave(NombreAve, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion)),
@@ -141,9 +144,8 @@ nuevaAve(NombreAve, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Cor
     open('AvesColomosPrueba.pl', append, File),
 
     % Escribe la información del ave en el archivo
-    % Asegúrate de que cada atributo esté presente, utiliza 'null' si falta alguno
-    maplist(ensure_value, [Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion], Values),
-    format(File, 'ave(~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w).\n', [NombreAve|Values]),
+    maplist(ensure_value, [Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion], FormattedValues),
+    format(File, 'ave(~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w, ~w).\n', [NombreAve|FormattedValues]),
 
     % Cierra el archivo
     close(File),
@@ -155,12 +157,21 @@ nuevaAve(NombreAve, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Cor
     send(Diag, destroy).
 
 % Asegurarse de que cada valor esté presente, de lo contrario utilizar 'null'
+% Además, si el valor contiene comas, lo convierte en una lista de Prolog.
 ensure_value(Value, Result) :-
-    (   nonvar(Value), Value \= '' -> Result = Value
+    (   nonvar(Value), Value \= '' ->
+        (   split_string(Value, ",", " ", Parts),
+            Parts = [_|_] -> % Verifica que haya más de un elemento
+            % Convertir las partes en una lista de átomos
+            maplist(atom_string, AtomParts, Parts),
+            % Crear una representación de lista Prolog en forma de cadena
+            atomics_to_string(AtomParts, ',', AtomList),
+            format(atom(Result), '[~w]', [AtomList])
+        ;   % Solo hay una parte, así que usa el valor como está
+            Result = Value
+        )
     ;   Result = 'null'
     ).
-
-
 
 % Mostrar todas las aves en la base de conocimientos
 mostrar_aves :-
@@ -197,5 +208,135 @@ limpiar_datos_y_salir(Ventana) :-
     send(Ventana, destroy).
 
 
-% Falta: Identificar Aves, guardar el ave añadida a la base de datos y
-% por ultimo darle un poco de decoracion a la interfaz
+% Identificar aves por sólo su nombre
+buscar_ave_nombre :-
+    new(DialogoBuscar, dialog('Buscar Ave por Nombre')),
+    send(DialogoBuscar, append, label(info, 'Ingresa el nombre de la ave:')),
+    send(DialogoBuscar, append, new(NombreAve, text_item(nombre))),
+    send(DialogoBuscar, append, button('Buscar', message(@prolog, identificar_ave_por_nombre, NombreAve?selection, DialogoBuscar))),
+    send(DialogoBuscar, default_button, 'Buscar'),  % Establece el botón por defecto
+    send(DialogoBuscar, open).
+
+% Función para buscar un ave por nombre y mostrar la información
+identificar_ave_por_nombre(NombreAve, DialogoBuscar) :-
+    (   ave(NombreAve, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion)
+    ->  send(DialogoBuscar, destroy), % Cierra el diálogo de búsqueda
+        mostrar_informacion_ave(NombreAve, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion)
+    ;   send(@display, inform, 'Ave no encontrada en la base de datos.'),
+        fail
+    ).
+
+% Función para mostrar la información de la ave encontrada
+mostrar_informacion_ave(NombreAve, Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion) :-
+    new(DialogoResultado, dialog('Información del Ave')),
+
+    % Convertir los atributos a cadenas si son listas para su visualización
+    lista_a_cadena(NombreAve, NombreString),
+    lista_a_cadena(Ojos, OjosString),
+    lista_a_cadena(Pico, PicoString),
+    lista_a_cadena(Cuerpo, CuerpoString),
+    lista_a_cadena(Patas, PatasString),
+    lista_a_cadena(Tarsos, TarsosString),
+    lista_a_cadena(Loras, LorasString),
+    lista_a_cadena(Alas, AlasString),
+    lista_a_cadena(Vientre, VientreString),
+    lista_a_cadena(Corona, CoronaString),
+    lista_a_cadena(Espalda, EspaldaString),
+    lista_a_cadena(Habitat, HabitatString),
+    lista_a_cadena(Alimentacion, AlimentacionString),
+
+
+    send(DialogoResultado, append, label(nombre, string('Nombre: %s', NombreString))),
+    send(DialogoResultado, append, label(ojos, string('Ojos: %s', OjosString))),
+    send(DialogoResultado, append, label(pico, string('Pico: %s', PicoString))),
+    send(DialogoResultado, append, label(cuerpo, string('Cuerpo: %s', CuerpoString))),
+    send(DialogoResultado, append, label(patas, string('Patas: %s', PatasString))),
+    send(DialogoResultado, append, label(tarsos, string('Tarsos: %s', TarsosString))),
+    send(DialogoResultado, append, label(loras, string('Loras: %s', LorasString))),
+    send(DialogoResultado, append, label(alas, string('Alas: %s', AlasString))),
+    send(DialogoResultado, append, label(vientre, string('Vientre: %s', VientreString))),
+    send(DialogoResultado, append, label(corona, string('Corona: %s', CoronaString))),
+    send(DialogoResultado, append, label(espalda, string('Espalda: %s', EspaldaString))),
+    send(DialogoResultado, append, label(habitat, string('Hábitat: %s', HabitatString))),
+    send(DialogoResultado, append, label(alimentacion, string('Alimentación: %s', AlimentacionString))),
+
+    replace_spaces(NombreString, URLFriendlyNombre),
+
+    % Crear el recuadro modificable con el enlace de búsqueda
+    SearchURLBase = 'https://www.google.com/search?q=ave+',
+    atom_concat(SearchURLBase, URLFriendlyNombre, SearchURL),
+    send(DialogoResultado, append, label(mas_info, 'Más información en:')),
+    send(DialogoResultado, append, text_item(search_url, SearchURL)),
+
+    % Botón para cerrar la ventana de diálogo
+    send(DialogoResultado, append, button('Cerrar', message(DialogoResultado, destroy))),
+
+    % Ajustar el tamaño de la ventana al contenido y mostrarla
+    send(DialogoResultado, open).
+
+    % Auxiliar para convertir una lista a una cadena, manteniendo átomos individuales como están
+lista_a_cadena(Attributo, Cadena) :-
+    (   is_list(Attributo) -> atomic_list_concat(Attributo, ', ', Cadena)
+    ;   Attributo == '' -> Cadena = 'Desconocido'
+    ;   Cadena = Attributo
+    ).
+
+% Reemplaza espacios en el nombre del ave con signos más (+) para la URL
+replace_spaces(String, URLFriendlyString) :-
+    split_string(String, " ", "+", SubStrings),
+    atomic_list_concat(SubStrings, "+", URLFriendlyString).
+
+% Identificar ave por sus atributos con 2 atributos coincidentes basta
+buscar_ave(Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion) :-
+    findall(NombreAve, (
+        ave(NombreAve, OjosAve, PicoAve, CuerpoAve, PatasAve, TarsosAve, LorasAve, AlasAve, VientreAve, CoronaAve, EspaldaAve, HabitatAve, AlimentacionAve),
+        coincidencias([Ojos, Pico, Cuerpo, Patas, Tarsos, Loras, Alas, Vientre, Corona, Espalda, Habitat, Alimentacion],
+                      [OjosAve, PicoAve, CuerpoAve, PatasAve, TarsosAve, LorasAve, AlasAve, VientreAve, CoronaAve, EspaldaAve, HabitatAve, AlimentacionAve],
+                      0, Coincidencias),
+        Coincidencias >= 2
+    ), AvesCoincidentes),
+
+    % Crear el diálogo y mostrar los resultados
+    new(DialogoResultado, dialog('Resultados')),
+    forall(member(Ave, AvesCoincidentes),
+           send(DialogoResultado, append, label('', string('Ave coincidente: %s', Ave)))
+    ),
+
+    % Botón para cerrar la ventana de diálogo
+    send(DialogoResultado, append, button('Cerrar', message(DialogoResultado, destroy))),
+
+    % Ajustar el tamaño de la ventana al contenido y mostrarla
+    send(DialogoResultado, open).
+
+% Auxiliar para contar coincidencias
+coincidencias([], [], Contador, Contador).
+coincidencias([Attr|RestoAttrs], [AveAttr|RestoAveAttrs], Contador, Coincidencias) :-
+    (   nonvar(Attr),
+        (   is_list(AveAttr) % Verifica si el atributo en la base de conocimientos es una lista
+        ->  split_string(Attr, ",", " ", AttrList),
+            maplist(trim, AttrList, TrimmedList),
+            maplist(atom_string, AtomList, TrimmedList), % Convierte la lista de strings a átomos si es necesario
+            (   subset(AtomList, AveAttr) % Verifica si todos los elementos de AtomList están en AveAttr
+            ->  NuevoContador is Contador + 1
+            ;   NuevoContador = Contador
+            )
+        ;   Attr = AveAttr
+        ->  NuevoContador is Contador + 1
+        ;   NuevoContador = Contador
+        )
+    ),
+    coincidencias(RestoAttrs, RestoAveAttrs, NuevoContador, Coincidencias).
+
+% Recorta espacios de un string
+trim(S, T) :-
+    string_codes(S, SC),
+    trim_helper(SC, TC),
+    string_codes(T, TC).
+
+trim_helper(S, T) :-
+    % Remove leading spaces
+    append(Leading, Rem, S),
+    \+ (member(C, Leading), \+ char_type(C, space)),
+    % Remove trailing spaces
+    append(T, Trailing, Rem),
+    \+ (member(C, Trailing), \+ char_type(C, space)).

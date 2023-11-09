@@ -8,3 +8,5 @@ ave(prueba2, [rojo,azul], null, null, null, null, null, [a], null, null, null, [
 ave(prueba3, null, null, null, null, [ehe,jj], null, null, [a], null, null, null, [k,l]).
 ave(agmmmm, [agm], null, null, null, null, null, null, null, null, null, null, [x]).
 ave(opakopd, null, null, null, null, null, [retyy], null, null, [ertyt], null, null, null).
+ave(ave_random, [rojizo], null, null, null, null, null, [cafe,negro], null, null, null, null, null).
+ave(ave_random, [naranja], [azul], null, null, null, null, null, null, null, null, null, null).
